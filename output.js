@@ -1,336 +1,291 @@
-//Thu Aug 01 2024 10:28:45 GMT+0000 (Coordinated Universal Time)
+//Thu Aug 01 2024 12:04:47 GMT+0000 (Coordinated Universal Time)
 //Base:https://github.com/echo094/decode-js
 //Modify:https://github.com/smallfawn/decode_action
 const {
-  getToken,
   sign,
-  tryCatchPromise,
-  validateCarmeWithType,
-  getCookies,
+  getToken,
+  wait,
   checkCk,
-  getUserInfo,
+  validateCarmeWithType,
+  User_Agent,
+  getCookies,
   checkCarmeCount,
-  wait
-} = require("./common");
-const _0x38436e = 12;
-const _0x23dc98 = require("request");
-const _0x5c30ec = process.env.ELE_CARME;
-async function _0x58fe79(_0x1938bb) {
-  const _0x213706 = new Date().getTime();
-  const _0x1aea2b = {
-    instance: "INNER",
-    method: "GET",
-    options: "{\"env\":\"online\"}",
-    path: "/getCertificationInfo",
-    protocols: "{\"Content-Type\":\"application/json\",\"mc-timestamp\":\"" + _0x213706 + "\",\"mc-env\":\"online\"}",
-    queryString: "{}",
-    sdkVersion: "1.5.4"
-  };
-  let _0x485b28 = await _0x2928b2(_0x1938bb, _0x1aea2b);
-  return _0x485b28.authentication;
+  getUserInfo,
+  tryCatchPromise,
+  getCookieMap
+} = require("./common.js");
+const {
+  sendNotify
+} = require("./ele_sendNotify.js");
+const _0x3ee842 = require("moment");
+const _0x43a291 = require("request");
+const _0xf58a19 = 10;
+const _0x55733f = "异常";
+let _0x31839a = getCookies();
+const _0x46e8ae = process.env.ELE_CARME;
+var _0x2c5f85 = "| 昵称          | 乐园币    | 总吃货豆 |余额 |\n| ------------- | ------------------ | ---------|---------|\n";
+function _0x15e7a0() {
+  return _0x3ee842().format("YYYY-MM-DD");
 }
-async function _0x2928b2(_0x383f4c, _0xcca1bd) {
-  const _0x48e431 = {
-    authority: "shopping.ele.me",
-    accept: "application/json",
-    "cache-control": "no-cache",
-    "content-type": "application/x-www-form-urlencoded",
-    cookie: _0x383f4c,
-    "x-miniapp-id-taobao": "3000000078920071",
-    "x-miniapp-version": "0.0.116",
-    "x-mini-appkey": "34190632",
-    "x-req-appkey": "34190632",
-    appid: "3000000078920071"
+function _0x23f651() {
+  var _0x1b2b0a = new Date(),
+    _0x1344ed = _0x1b2b0a.getMonth() + 1,
+    _0x3be63e = _0x1b2b0a.getDate();
+  _0x1344ed <= 9 && (_0x1344ed = "0" + _0x1344ed);
+  _0x3be63e <= 9 && (_0x3be63e = "0" + _0x3be63e);
+  return _0x1b2b0a.getFullYear() + "-" + _0x1344ed + "-" + _0x3be63e;
+}
+function _0x1fb425(_0x1a7133) {
+  const _0x879662 = {
+    url: "https://httpizza.ele.me/walletUserV2/storedcard/queryBalanceBycardType?cardType=platform",
+    headers: {}
   };
-  const _0x5b0fb1 = new Date().getTime();
-  const _0x41c3bc = 34190632;
-  var _0x4f1c6f = "data=" + encodeURIComponent(JSON.stringify(_0xcca1bd));
-  const _0x115515 = getToken(_0x383f4c),
-    _0x322f91 = _0x115515.split("_")[0];
-  const _0xe48caa = await sign(_0x322f91 + "&" + _0x5b0fb1 + "&" + _0x41c3bc + "&" + JSON.stringify(_0xcca1bd), _0x5c30ec);
-  const _0x109901 = {
-    url: "https://shopping.ele.me/h5/mtop.miniapp.cloud.application.request/1.0/?jsv=2.6.1&appKey=34190632&t=" + _0x5b0fb1 + "&sign=" + _0xe48caa + "&api=mtop.miniapp.cloud.application.request&v=1.0&type=originaljson&ttid=1608030065155%40eleme_android_11.0.38",
-    method: "POST",
-    headers: _0x48e431,
-    body: _0x4f1c6f
-  };
-  return tryCatchPromise(_0x1993b3 => {
-    _0x23dc98(_0x109901, async (_0x3c170f, _0x1a32da, _0x4ff6bf) => {
-      if (!_0x3c170f && _0x1a32da.statusCode === 200) {
+  _0x879662.headers.Cookie = _0x1a7133;
+  _0x879662.headers["User-Agent"] = User_Agent;
+  _0x879662.headers.referer = "https://r.ele.me/alsc-wallet/home.html?channel=grzx";
+  return tryCatchPromise(_0x171e05 => {
+    _0x43a291(_0x879662, async (_0x3c1e94, _0x7b3e1d, _0x1d7b01) => {
+      if (!_0x3c1e94 && _0x7b3e1d.statusCode == 200) {
+        const _0x1c177e = JSON.parse(_0x1d7b01);
         try {
-          const _0x2d4486 = JSON.parse(_0x4ff6bf);
-          _0x1993b3(_0x2d4486.data.data);
-        } catch (_0x5ad4f2) {
-          console.log(_0x4ff6bf);
-          _0x1993b3(null);
+          _0x171e05(_0x1c177e.data.totalAmount);
+        } catch (_0x22658b) {
+          console.log(_0x1d7b01);
+          _0x171e05(null);
         }
       } else {
-        _0x1993b3(null);
+        _0x171e05(null);
       }
     });
   });
 }
-async function _0x337fd4(_0x6031a9) {
-  const _0x350363 = new Date().getTime();
-  const _0x27835c = {
-    instance: "INNER",
-    method: "GET",
-    options: "{\"env\":\"online\"}",
-    path: "/enterHome",
-    protocols: "{\"Content-Type\":\"application/json\",\"mc-timestamp\":\"" + _0x350363 + "\",\"mc-env\":\"online\"}",
-    queryString: "{}",
-    sdkVersion: "1.5.4"
+function _0xe7326c(_0x120afa) {
+  const _0x1b9ec9 = {
+    Cookie: _0x120afa,
+    "User-Agent": User_Agent
   };
-  const _0x1c3f14 = await _0x2928b2(_0x6031a9, _0x27835c);
-  return _0x1c3f14.playerInfo;
-}
-async function _0x1c69aa(_0x574335) {
-  const _0x4eb470 = new Date().getTime();
-  const _0x308f36 = {
-    instance: "INNER",
-    method: "GET",
-    options: "{\"env\":\"online\"}",
-    path: "/getEventTasks",
-    protocols: "{\"Content-Type\":\"application/json\",\"mc-timestamp\":\"" + _0x4eb470 + "\",\"mc-env\":\"online\"}",
-    queryString: "{}",
-    sdkVersion: "1.5.4"
+  const _0x244676 = {
+    url: "https://h5.ele.me/restapi/svip_biz/v1/supervip/foodie/records?latitude=30.153352&limit=20&longitude=104.153352&offset=0",
+    headers: _0x1b9ec9
   };
-  let _0x43d3bb = await _0x2928b2(_0x574335, _0x308f36);
-  return _0x43d3bb.taskList;
-}
-function _0x12353a(_0x32ea65, _0x284d9d = false) {
-  let _0x1ad749 = true;
-  for (let _0x279c39 = 0; _0x279c39 < _0x32ea65.length; _0x279c39++) {
-    let _0x2dd094 = _0x32ea65[_0x279c39];
-    let _0x46ce0e = _0x2dd094.finishStatus;
-    let _0x32fd13 = _0x2dd094.actionType;
-    if (_0x32fd13 === "score" && _0x284d9d) {
-      continue;
-    }
-    if (!_0x46ce0e) {
-      _0x1ad749 = _0x46ce0e;
-      return _0x1ad749;
-    }
-  }
-  return _0x1ad749;
-}
-function _0x1a7876(_0x44d189, _0x1c26ee) {
-  var _0x4117e0 = Math.floor(Math.random() * (_0x1c26ee - _0x44d189 + 1) + _0x44d189);
-  return _0x4117e0;
-}
-async function _0x1a5a37(_0x4953fd, _0x969ed3, _0x11435c, _0x5da44f) {
-  const _0x4e16d3 = {
-    body: "{\"level\":" + _0x11435c + ",\"itemBuy\":[],\"type\":\"" + _0x5da44f + "\"}",
-    headers: "{\"Content-Type\":\"application/json;charset=UTF-8\"}",
-    instance: "INNER",
-    method: "POST",
-    options: "{\"env\":\"online\"}",
-    path: "/enterLevelNew",
-    protocols: "{\"Content-Type\":\"application/json\",\"mc-timestamp\":\"" + new Date().getTime() + "\",\"mc-env\":\"online\"}",
-    queryString: "{\"playerToken\":\"" + _0x969ed3.playerId + new Date().getTime() + "\"}",
-    sdkVersion: "1.5.4"
-  };
-  return await _0x2928b2(_0x4953fd, _0x4e16d3);
-}
-async function _0x20303c(_0x467ceb, _0xf5b55d) {
-  const _0x523c44 = new Date().getTime();
-}
-async function _0x6aaa57(_0x3da9c0) {
-  try {
-    const _0x484e9e = new Date().getTime();
-    const _0x151ffd = {
-      instance: "INNER",
-      method: "GET",
-      options: "{\"env\":\"online\"}",
-      path: "/getNewChallengeInfo",
-      protocols: "{\"Content-Type\":\"application/json\",\"mc-timestamp\":\"" + _0x484e9e + "\",\"mc-env\":\"online\"}",
-      queryString: "{}",
-      sdkVersion: "1.5.4"
-    };
-    const _0x385406 = await _0x2928b2(_0x3da9c0, _0x151ffd);
-    return _0x385406.levelInfo.id;
-  } catch (_0x77854a) {
-    console.log("赛季挑战还未开始");
-    return null;
-  }
-}
-async function _0x547a04(_0x141422) {
-  let _0x24ee75 = 1;
-  let _0x22ee65 = await _0x337fd4(_0x141422);
-  await wait(1);
-  let _0x303b58 = await _0x1c69aa(_0x141422);
-  if (!_0x303b58) {
-    const _0x177d09 = _0x22ee65.level;
-    if (_0x177d09 === 0) {
-      console.log("该账号没有玩过美食摊，请玩过后在跑脚本");
-    } else {
-      console.log("获取任务列表失败，请稍后再试");
-    }
-    return;
-  }
-  let _0x7a0f55 = 1;
-  let _0x1a93fe = 100;
-  let _0x1dd6da = 100;
-  let _0x1d9a36 = _0x12353a(_0x303b58);
-  let _0x49ce2c = false;
-  for (let _0x181dc6 = 0; _0x181dc6 < _0x303b58.length; _0x181dc6++) {
-    let _0x3b7157 = _0x303b58[_0x181dc6];
-    let _0x192c5d = _0x3b7157.actionType;
-    let _0xb0f88c = _0x3b7157.finishStatus;
-    let _0x53c01c = _0x3b7157.targetAmount;
-    if (_0x192c5d === "hit" && _0xb0f88c === false) {
-      _0x7a0f55 = _0x53c01c;
-    } else {
-      if (_0x192c5d === "customer" && _0xb0f88c === false) {
-        _0x1a93fe = _0x53c01c;
+  return tryCatchPromise(_0x131e5d => {
+    _0x43a291(_0x244676, async (_0x14f786, _0x49345d, _0x618a68) => {
+      if (!_0x14f786 && _0x49345d.statusCode == 200) {
+        const _0x18bbc7 = JSON.parse(_0x618a68);
+        try {
+          _0x131e5d(_0x18bbc7.peaCount);
+        } catch (_0x3df62f) {
+          console.log(_0x618a68);
+          _0x131e5d(null);
+        }
       } else {
-        if (_0x192c5d === "makeDishes" && _0xb0f88c === false) {
-          _0x1dd6da = _0x53c01c;
-        } else {
-          if (_0x192c5d === "score") {
-            _0x49ce2c = !_0xb0f88c;
+        _0x131e5d(null);
+      }
+    });
+  });
+}
+async function _0xc1502e(_0x160c7f) {
+  const _0x3562ed = {
+    "content-type": "application/json",
+    Cookie: _0x160c7f,
+    "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36"
+  };
+  s = _0x3562ed;
+  r = "https://h5.ele.me/restapi/svip_biz/v1/supervip/foodie/records?offset=0&limit=100&longitude=39.916527&latitude=116.397128";
+  const _0x48f96f = {
+    url: r,
+    headers: s
+  };
+  return tryCatchPromise(_0x74a4a1 => {
+    _0x43a291(_0x48f96f, async (_0x52123b, _0x42a22e, _0x5dd484) => {
+      if (!_0x52123b && _0x42a22e.statusCode == 200) {
+        const _0xdaab51 = JSON.parse(_0x5dd484);
+        try {
+          for (var _0x1d6792 = _0x23f651(), _0x1c93be = _0xdaab51.records, _0x33b6c4 = 0, _0x3c813c = 0; _0x3c813c < _0x1c93be.length; _0x3c813c++) {
+            _0x1c93be[_0x3c813c].createdTime.indexOf(_0x1d6792) > -1 && 1 == _0x1c93be[_0x3c813c].optType && (_0x33b6c4 += _0x1c93be[_0x3c813c].count);
           }
+          _0x74a4a1(_0x33b6c4);
+        } catch (_0x545707) {
+          console.log(_0x5dd484);
+          _0x74a4a1(null);
         }
-      }
-    }
-  }
-  let _0x115eea = false;
-  while (!_0x1d9a36 && _0x24ee75 < 10) {
-    _0x24ee75++;
-    try {
-      let _0x220eab = await _0x337fd4(_0x141422);
-      const _0x14c26e = _0x220eab.level;
-      let _0x28a68b = _0x14c26e + 1;
-      await _0x20303c(_0x141422, _0x28a68b);
-      let _0x2cb924 = _0x1a7876(10000, 30000);
-      let _0x32e42c = _0x1a7876(30, 50);
-      let _0x327bb8 = "GAME";
-      if (_0x49ce2c && !_0x115eea) {
-        _0x327bb8 = "DAILY_CHALLENGE";
-        let _0x259099 = await _0x6aaa57(_0x141422);
-        if (_0x259099 === null) {
-          _0x327bb8 = "GAME";
-          _0x115eea = true;
-        } else {
-          _0x28a68b = _0x259099;
-        }
-      }
-      const _0x21d6c7 = await _0x1a5a37(_0x141422, _0x220eab, _0x28a68b, _0x327bb8);
-      if (_0x21d6c7.errorMessage) {
-        console.log(_0x21d6c7.errorMessage);
-        break;
-      }
-      const _0xb189a8 = {
-        body: "{\"level\":\"" + _0x28a68b + "\",\"finishLevel\":true,\"maxHit\":" + _0x7a0f55 + ",\"angry\":false,\"like\":" + _0x32e42c + ",\"score\":" + _0x2cb924 + ",\"playerHead\":\"https://gw.alicdn.com/imgextra/i2/O1CN01dU4q4e1xzSlu9tqun_!!6000000006514-2-tps-512-512.png\",\"playerName\":\"tb**cd6\",\"r\":[400,6000,104,4200,220,2290,98,2000,6000,420,4000,420,173,4000,630,200,210,4400,168,6000,600,400],\"levelType\":\"" + _0x327bb8 + "\",\"customerAmount\":" + _0x1a93fe + ",\"scorchDishes\": 0,\"wasteBins\":0,\"golds\":189,\"gem\":1,\"itemUsed\":[],\"itemBuy\":[],\"foods\":[{\"food\":\"doujiang\",\"amount\":" + _0x1dd6da + "},{\"food\":\"mianbing\",\"amount\":10},{\"food\":\"mianbing_shengcai_kaochang_shalajiang\",\"amount\":1},{\"food\":\"mianbing_shengcai_kaochang\",\"amount\":7},{\"food\":\"mianbing_kaochang\",\"amount\":1}]}",
-        headers: "{\"Content-Type\":\"application/json;charset=UTF-8\"}",
-        instance: "INNER",
-        method: "POST",
-        options: "{\"env\":\"online\"}",
-        path: "/finishLevel",
-        protocols: "{\"Content-Type\":\"application/json\",\"mc-timestamp\":\"" + new Date().getTime() + "\",\"mc-env\":\"online\"}",
-        queryString: "{\"playerToken\":\"" + _0x220eab.playerId + new Date().getTime() + "\"}",
-        sdkVersion: "1.5.4"
-      };
-      let _0x43d129 = await _0x2928b2(_0x141422, _0xb189a8);
-      if (_0x43d129 && _0x43d129.errorMessage === "没有对应关卡") {
-        console.log("你已通关");
-        break;
       } else {
-        if (_0x43d129.errorMessage) {
-          console.log(_0x43d129.errorMessage);
-          break;
-        }
+        _0x74a4a1(null);
       }
-      _0x303b58 = await _0x1c69aa(_0x141422);
-      _0x1d9a36 = _0x12353a(_0x303b58, _0x115eea);
-      for (let _0xe39dc = 0; _0xe39dc < _0x303b58.length; _0xe39dc++) {
-        let _0x4bd0db = _0x303b58[_0xe39dc];
-        let _0x172057 = _0x4bd0db.actionType;
-        let _0x288835 = _0x4bd0db.finishStatus;
-        let _0x56528e = _0x4bd0db.targetAmount;
-        if (_0x172057 === "hit" && _0x288835 === false) {
-          _0x7a0f55 = _0x56528e;
-        } else {
-          if (_0x172057 === "customer" && _0x288835 === false) {
-            _0x1a93fe = _0x56528e;
-          } else {
-            if (_0x172057 === "makeDishes" && _0x288835 === false) {
-              _0x1dd6da = _0x56528e;
-            } else {
-              if (_0x172057 === "score" && !_0x115eea) {
-                _0x49ce2c = !_0x288835;
+    });
+  });
+}
+async function _0x2e425a(_0x46ff2a) {
+  const _0x4f9ca3 = {
+    bizScene: "IDIOM",
+    bizParam: "{\"type\":\"ggetGold\"}",
+    bizMethod: "queryIndex"
+  };
+  const _0x39444a = await _0x1df2c9(_0x46ff2a, _0x4f9ca3);
+  return _0x39444a.num;
+}
+async function _0x1df2c9(_0x396c11, _0x1e34ac) {
+  const _0x1c07f0 = {
+    authority: "shopping.ele.me",
+    accept: "application/json",
+    "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+    "cache-control": "no-cache",
+    "content-type": "application/x-www-form-urlencoded",
+    origin: "https://r.ele.me",
+    pragma: "no-cache",
+    referer: "https://r.ele.me/linkgame/index.html?navType=3&spm-pre=a2ogi.13162730.zebra-ele-login-module-9089118186&spm=a13.b_activity_kb_m71293.0.0",
+    cookie: _0x396c11,
+    "x-ele-ua": "RenderWay/H5 AppName/wap Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36",
+    "user-agent": "Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36"
+  };
+  const _0x9ef4df = new Date().getTime();
+  const _0x582767 = 12574478;
+  var _0x2fb2c6 = "data=" + encodeURIComponent(JSON.stringify(_0x1e34ac));
+  const _0x4e6fdb = getToken(_0x396c11),
+    _0x460c4b = _0x4e6fdb.split("_")[0];
+  const _0x1d360e = await sign(_0x460c4b + "&" + _0x9ef4df + "&" + _0x582767 + "&" + JSON.stringify(_0x1e34ac), _0x46e8ae);
+  const _0x26d10c = {
+    url: "https://shopping.ele.me/h5/mtop.alsc.playgame.mini.game.dispatch/1.0/?jsv=2.6.1&appKey=12574478&t=" + _0x9ef4df + "&sign=" + _0x1d360e + "&api=mtop.alsc.playgame.mini.game.dispatch&v=1.0&type=originaljson&dataType=json&timeout=5000&subDomain=shopping&mainDomain=ele.me&H5Request=true&pageDomain=ele.me&ttid=h5%40chrome_android_87.0.4280.141&SV=5.0",
+    method: "POST",
+    headers: _0x1c07f0,
+    body: _0x2fb2c6
+  };
+  return tryCatchPromise(_0x46952e => {
+    _0x43a291(_0x26d10c, async (_0x1ea0a1, _0x266ff8, _0x582388) => {
+      if (!_0x1ea0a1 && _0x266ff8.statusCode == 200) {
+        try {
+          const _0x3cb15f = JSON.parse(_0x582388);
+          const _0x470a8b = JSON.parse(_0x3cb15f.data.data);
+          _0x46952e(_0x470a8b);
+        } catch (_0x1d36db) {
+          console.log(_0x582388);
+          _0x46952e(null);
+        }
+      } else {
+        _0x46952e(null);
+      }
+    });
+  });
+}
+async function _0xf7ccac(_0x1e0e27, _0x54f7f5) {
+  const _0x4e034e = {
+    authority: "mtop.ele.me",
+    accept: "application/json",
+    "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+    "cache-control": "no-cache",
+    "content-type": "application/x-www-form-urlencoded",
+    cookie: _0x1e0e27,
+    origin: "https://tb.ele.me",
+    pragma: "no-cache",
+    referer: "https://tb.ele.me/wow/alsc/mod/b9ee9e6451bc8eda7a6afcbb?spm=a2ogi.13162730.zebra-ele-login-module-9089118186&spm=a2ogi.13162730.zebra-ele-login-module-9089118186&spm-pre=a13.b_activity_kb_m71293.ebridge.login",
+    "user-agent": "Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36"
+  };
+  const _0x1d1a7b = {
+    templateId: "1404",
+    bizScene: "game_center",
+    convertType: "GAME_CENTER",
+    startTime: _0x15e7a0() + " 00:00:00",
+    pageNo: _0x54f7f5,
+    pageSize: "20"
+  };
+  const _0xa0411f = new Date().getTime();
+  const _0x2b5c72 = 12574478;
+  var _0x1a5ddd = "data=" + encodeURIComponent(JSON.stringify(_0x1d1a7b));
+  const _0x267792 = getToken(_0x1e0e27),
+    _0x1c4025 = _0x267792.split("_")[0];
+  const _0x26ba75 = await sign(_0x1c4025 + "&" + _0xa0411f + "&" + _0x2b5c72 + "&" + JSON.stringify(_0x1d1a7b), _0x46e8ae);
+  const _0x421606 = {
+    url: "https://mtop.ele.me/h5/mtop.koubei.interaction.center.common.querypropertydetail/1.0/?jsv=2.7.1&appKey=12574478&t=" + _0xa0411f + "&sign=" + _0x26ba75 + "&api=mtop.koubei.interaction.center.common.querypropertydetail&v=1.0",
+    method: "POST",
+    headers: _0x4e034e,
+    body: _0x1a5ddd
+  };
+  return tryCatchPromise(_0x51e67c => {
+    _0x43a291(_0x421606, async (_0x451736, _0x3352bc, _0x15e984) => {
+      if (!_0x451736 && _0x3352bc.statusCode === 200) {
+        const _0x1fab8a = JSON.parse(_0x15e984);
+        try {
+          if (_0x1fab8a.data) {
+            var _0x5192ab = 0;
+            for (let _0xadb515 = 0; _0xadb515 < _0x1fab8a.data.list.length; _0xadb515++) {
+              const _0x4b4d8f = _0x1fab8a.data.list[_0xadb515];
+              if (_0x4b4d8f.detailType === "GRANT" && _0x4b4d8f.gmtModified.indexOf(_0x15e7a0()) !== -1) {
+                _0x5192ab += Number(_0x4b4d8f.amount);
               }
             }
           }
+          _0x51e67c(_0x5192ab);
+        } catch (_0x2b9b54) {
+          console.log(_0x15e984);
         }
+        _0x51e67c(_0x1fab8a);
+      } else {
+        _0x51e67c(null);
       }
-      for (let _0x553676 = 0; _0x553676 < _0x303b58.length; _0x553676++) {
-        let _0x101cc6 = _0x303b58[_0x553676];
-        if (_0x101cc6.isAvailable) {
-          const _0x321ee8 = await _0x5d6ac3(_0x141422, _0x101cc6.id);
-          if (_0x321ee8) {
-            console.log(_0x101cc6.description + "已完成，当前乐园币：" + _0x321ee8);
-          }
-        }
-      }
-    } catch (_0x347024) {
-      console.log(_0x347024);
+    });
+  });
+}
+async function _0x378f6c(_0x429356, _0x16a72b) {
+  const _0x220a27 = getCookieMap(_0x429356);
+  if (!_0x220a27.has("wxUid")) {
+    console.log("没有获取到推送 uid，不推送消息\n");
+  } else {
+    await sendNotify("饿了么资产推送", _0x16a72b, {
+      uid: _0x220a27.get("wxUid")
+    });
+  }
+}
+async function _0x163ae7() {
+  await validateCarmeWithType(_0x46e8ae, 1);
+  for (let _0x3913fc = 0; _0x3913fc < _0x31839a.length; _0x3913fc++) {
+    let _0x1e1848 = _0x31839a[_0x3913fc];
+    _0x1e1848 = await checkCk(_0x1e1848);
+    if (!_0x1e1848) {
+      continue;
     }
-  }
-  if (_0x12353a(_0x303b58, _0x115eea)) {
-    console.log("经营美食摊任务全部完成😄");
-  }
-}
-async function _0x5d6ac3(_0x5ca30d, _0x48b1de) {
-  const _0x21d91f = new Date().getTime();
-  const _0x1b56f7 = {
-    body: "{\"taskId\":" + _0x48b1de + "}",
-    headers: "{\"Content-Type\":\"application/json;charset=UTF-8\"}",
-    instance: "INNER",
-    method: "POST",
-    options: "{\"env\":\"online\"}",
-    path: "/sendDish",
-    protocols: "{\"Content-Type\":\"application/json\",\"mc-timestamp\":\"" + _0x21d91f + "\",\"mc-env\":\"online\"}",
-    sdkVersion: "1.5.4"
-  };
-  return await _0x2928b2(_0x5ca30d, _0x1b56f7);
-}
-async function _0x51929f() {
-  await validateCarmeWithType(_0x5c30ec, 1);
-  const _0x457dfa = getCookies();
-  for (let _0x3054fb = 0; _0x3054fb < _0x457dfa.length; _0x3054fb++) {
-    const _0x4f239e = _0x457dfa[_0x3054fb];
-    if (!_0x4f239e) {
-      console.log(" ❌无效用户信息, 请重新获取ck");
+    let _0x17b596 = await getUserInfo(_0x1e1848);
+    if (!_0x17b596.username) {
+      console.log("第", _0x3913fc + 1, "账号失效！请重新登录！！！😭");
+      continue;
+    }
+    const _0x4feeeb = _0x17b596.user_id;
+    await checkCarmeCount(_0x46e8ae, _0x4feeeb, _0xf58a19);
+    console.log("******开始【饿了么账号", _0x3913fc + 1, "】", _0x17b596.username, "*********");
+    let _0x42bffc = await _0x1fb425(_0x1e1848);
+    if (_0x42bffc != null) {
+      _0x42bffc = _0x55733f;
     } else {
-      try {
-        let _0xfe58ae = await checkCk(_0x4f239e, _0x3054fb);
-        if (!_0xfe58ae) {
-          continue;
-        }
-        let _0x13aa44 = await getUserInfo(_0xfe58ae);
-        if (!_0x13aa44.username) {
-          console.log("第", _0x3054fb + 1, "账号失效！请重新登录！！！😭");
-          continue;
-        }
-        const _0x2ed612 = _0x13aa44.user_id;
-        await checkCarmeCount(_0x5c30ec, _0x2ed612, _0x38436e);
-        console.log("******开始【饿了么账号", _0x3054fb + 1, "】", _0x13aa44.username, "*********");
-        let _0x4c6f12 = await _0x58fe79(_0xfe58ae);
-        if (!_0x4c6f12) {
-          console.log("请完成实名认证后再来玩游戏");
-          continue;
-        }
-        await _0x547a04(_0xfe58ae);
-        if (_0x3054fb !== _0x457dfa.length - 1) {
-          console.log("延时 5 秒");
-          await wait(5);
-        }
-      } catch (_0x2cf95c) {
-        console.log(_0x2cf95c);
-      }
+      _0x42bffc = _0x42bffc / 100;
     }
+    let _0x524645 = await _0xe7326c(_0x1e1848);
+    if (!_0x524645) {
+      _0x524645 = _0x55733f;
+    }
+    let _0x14465a = await _0xf7ccac(_0x1e1848, 1);
+    await wait(1);
+    let _0x221f17 = await _0xf7ccac(_0x1e1848, 2);
+    await wait(1);
+    let _0x101b47 = await _0xf7ccac(_0x1e1848, 3);
+    await wait(1);
+    let _0x51d93b = await _0xf7ccac(_0x1e1848, 4);
+    await wait(1);
+    let _0x2e48f2 = await _0xf7ccac(_0x1e1848, 5);
+    let _0x30b429 = _0x14465a + _0x221f17 + _0x101b47 + _0x51d93b + _0x2e48f2;
+    if (!_0x30b429) {
+      _0x30b429 = _0x55733f;
+    }
+    var _0x4b0682 = await _0x2e425a(_0x1e1848);
+    if (!_0x4b0682) {
+      _0x4b0682 = _0x55733f;
+    }
+    console.log("乐园币：" + _0x30b429);
+    console.log("当前乐园币：" + _0x4b0682);
+    console.log("总吃货豆：" + _0x524645);
+    console.log("余额：" + _0x42bffc);
+    var _0x3ec5bd = "###资产推送\n" + _0x2c5f85 + "|" + _0x17b596.username + "|" + _0x30b429 + "/" + _0x4b0682 + "|" + _0x524645 + "|" + _0x42bffc + "|";
+    await _0x378f6c(_0x1e1848, _0x3ec5bd);
+    await wait(10);
   }
   process.exit(0);
 }
-_0x51929f();
+_0x163ae7();
